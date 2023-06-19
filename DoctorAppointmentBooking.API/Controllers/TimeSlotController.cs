@@ -1,4 +1,5 @@
-﻿using DoctorAppointmentBooking.API.Entities;
+﻿using DoctorAppointmentBooking.API.Dtos;
+using DoctorAppointmentBooking.API.Entities;
 using DoctorAppointmentBooking.API.Services;
 using Microsoft.AspNetCore.Mvc;
 using System.Globalization;
@@ -50,53 +51,30 @@ namespace DoctorAppointmentBooking.API.Controllers
         }
 
         /// <summary>
+        /// Retrieves all available time slots for a specific doctor.
+        /// </summary>
+        /// <param name="doctorId">The unique identifier of the doctor.</param>
+        /// <returns>A collection of available time slots for the specified doctor.</returns>
+        [HttpGet("doctors/{doctorId}/available")]
+        public async Task<ActionResult<IEnumerable<TimeSlot>>> GetAvailableTimeSlotsByDoctor(Guid doctorId)
+        {
+            var availableTimeSlots = await _timeSlotService.GetAvailableTimeSlotsByDoctorAsync(doctorId);
+            return Ok(availableTimeSlots);
+        }
+
+        /// <summary>
         /// Adds a new time slot for a specific doctor.
         /// </summary>
         /// <param name="doctorId">The unique identifier of the doctor.</param>
         /// <param name="dateTime">The date and time of the time slot.</param>
         /// <returns>The created time slot.</returns>
         [HttpPost("doctors/{doctorId}/add")]
-        public async Task<IActionResult> AddTimeSlot(Guid doctorId, [FromBody] JsonElement json)
+        public async Task<IActionResult> AddTimeSlot(Guid doctorId, [FromBody] TimeSlotDto timeSlotDto)
         {
-            if (!json.TryGetProperty("dateTimeString", out JsonElement dateTimeStringElement))
-            {
-                return BadRequest("Invalid payload format. The 'dateTimeString' field is required.");
-            }
-
-            var dateTimeString = dateTimeStringElement.GetString();
-
-            var dateTimeFormat = "dd/MM/yyyy hh:mm tt";
-            if (json.TryGetProperty("dateTimeFormat", out JsonElement dateTimeFormatElement))
-            {
-                dateTimeFormat = dateTimeFormatElement.GetString();
-            }
-
-            if (!DateTime.TryParseExact(dateTimeString, dateTimeFormat, CultureInfo.InvariantCulture, DateTimeStyles.None, out DateTime dateTime))
-            {
-                return BadRequest("Invalid date and time format.");
-            }
-
-            // Retrieve the doctor by ID
-            var doctor = await _doctorService.GetDoctorByIdAsync(doctorId);
-            if (doctor == null)
-            {
-                return NotFound("Doctor not found.");
-            }
-
-            var cost = 5.00m;
-            if (json.TryGetProperty("cost", out JsonElement costElement))
-            {
-                costElement.TryGetDecimal(out cost);
-            }
+            timeSlotDto.DoctorId = doctorId;
 
             // Create a new TimeSlot instance
-            var timeSlot = new TimeSlot
-            {
-                DoctorId = doctorId,
-                DoctorName = doctor.Name,
-                Time = dateTime,
-                Cost = cost
-            };
+            var timeSlot = await SyncTimeSlotDtoWithData(timeSlotDto, new TimeSlot());
 
             try
             {
@@ -107,6 +85,94 @@ namespace DoctorAppointmentBooking.API.Controllers
             {
                 return BadRequest($"An error occurred while adding a time slot: {ex.Message}");
             }
+        }
+
+        /// <summary>
+        /// Updates an existing time slot.
+        /// </summary>
+        /// <param name="id">The unique identifier of the time slot.</param>
+        /// <param name="timeSlotDto">The time slot data to update.</param>
+        /// <returns>The updated time slot.</returns>
+        [HttpPut("{id}")]
+        public async Task<IActionResult> UpdateTimeSlot(Guid id, TimeSlotDto timeSlotDto)
+        {
+            // Check if the time slot exists
+            var existingTimeSlot = await _timeSlotService.GetTimeSlotByIdAsync(id);
+            if (existingTimeSlot == null)
+            {
+                return NotFound();
+            }
+
+            // if ID was set in Dto, assume it is for validation purpose since
+            // we do not allow user to update existing ID manually
+            if (timeSlotDto.Id.HasValue && id != timeSlotDto.Id)
+            {
+                return BadRequest("Time slot ID mismatch.");
+            }
+
+            await SyncTimeSlotDtoWithData(timeSlotDto, existingTimeSlot);
+
+            // Update the time slot
+            try
+            {
+                await _timeSlotService.UpdateTimeSlotAsync(existingTimeSlot);
+                return Ok(existingTimeSlot);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest($"An error occurred while updating the time slot: {ex.Message}");
+            }
+        }
+
+        /// <summary>
+        /// Synchronizes the properties of a TimeSlotDto with an existing TimeSlot instance.
+        /// </summary>
+        /// <param name="timeSlotDto">The TimeSlotDto containing the updated values.</param>
+        /// <param name="timeSlot">The TimeSlot instance to be updated.</param>
+        private async Task<TimeSlot> SyncTimeSlotDtoWithData(TimeSlotDto timeSlotDto, TimeSlot timeSlot)
+        {
+            // Sync the properties from the DTO to the existing TimeSlot
+            if (timeSlotDto.Time.HasValue)
+            {
+                timeSlot.Time = timeSlotDto.Time.Value;
+            }
+            else if (!string.IsNullOrWhiteSpace(timeSlotDto.TimeString))
+            {
+                if (DateTime.TryParseExact(timeSlotDto.TimeString, timeSlotDto.TimeFormat,
+                    CultureInfo.InvariantCulture, DateTimeStyles.None, out DateTime parsedTime))
+                {
+                    timeSlot.Time = parsedTime;
+                }
+                else
+                {
+                    throw new ArgumentException("Invalid date and time format.");
+                }
+            }
+
+            if (timeSlotDto.DoctorId.HasValue)
+            {
+                // Retrieve the doctor by ID
+                var doctor = await _doctorService.GetDoctorByIdAsync(timeSlotDto.DoctorId.Value);
+                if (doctor == null)
+                {
+                    throw new ArgumentException("Doctor not found.");
+                }
+
+                timeSlot.DoctorId = doctor.Id;
+                timeSlot.DoctorName = doctor.Name;
+            }
+
+            if (timeSlotDto.IsReserved.HasValue)
+            {
+                timeSlot.IsReserved = timeSlotDto.IsReserved.Value;
+            }
+
+            if (timeSlotDto.Cost.HasValue)
+            {
+                timeSlot.Cost = timeSlotDto.Cost.Value;
+            }
+
+            return timeSlot;
         }
 
         /// Deletes a time slot by its unique identifier.
@@ -132,6 +198,28 @@ namespace DoctorAppointmentBooking.API.Controllers
             {
                 return BadRequest($"An error occurred while deleting the time slot: {ex.Message}");
             }
+        }
+
+        /// <summary>
+        /// Retrieves all time slots.
+        /// </summary>
+        /// <returns>A collection of time slots.</returns>
+        [HttpGet]
+        public async Task<ActionResult<IEnumerable<TimeSlot>>> GetAllTimeSlots()
+        {
+            var timeSlots = await _timeSlotService.GetAllTimeSlotsAsync();
+            return Ok(timeSlots);
+        }
+
+        /// <summary>
+        /// Retrieves all available time slots.
+        /// </summary>
+        /// <returns>A collection of available time slots.</returns>
+        [HttpGet("available")]
+        public async Task<ActionResult<IEnumerable<TimeSlot>>> GetAllAvailableTimeSlots()
+        {
+            IEnumerable<TimeSlot> availableTimeSlots = await _timeSlotService.GetAllAvailableTimeSlotsAsync();
+            return Ok(availableTimeSlots);
         }
     }
 }

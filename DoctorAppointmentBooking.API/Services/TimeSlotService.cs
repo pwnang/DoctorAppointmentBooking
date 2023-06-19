@@ -23,6 +23,24 @@ namespace DoctorAppointmentBooking.API.Services
         }
 
         /// <summary>
+        /// Retrieves all time slots.
+        /// </summary>
+        /// <returns>A collection of time slots.</returns>
+        public async Task<IEnumerable<TimeSlot>> GetAllTimeSlotsAsync()
+        {
+            return await _timeSlotRepository.GetAllTimeSlotsAsync();
+        }
+
+        /// <summary>
+        /// Retrieves all available time slots.
+        /// </summary>
+        /// <returns>A collection of available time slots.</returns>
+        public async Task<IEnumerable<TimeSlot>> GetAllAvailableTimeSlotsAsync()
+        {
+            return await _timeSlotRepository.GetAllAvailableTimeSlotsAsync();
+        }
+
+        /// <summary>
         /// Retrieves all time slots for a specific doctor.
         /// </summary>
         /// <param name="doctorId">The unique identifier of the doctor.</param>
@@ -30,6 +48,16 @@ namespace DoctorAppointmentBooking.API.Services
         public async Task<IEnumerable<TimeSlot>> GetTimeSlotsByDoctorAsync(Guid doctorId)
         {
             return await _timeSlotRepository.GetTimeSlotsByDoctorAsync(doctorId);
+        }
+
+        /// <summary>
+        /// Retrieves all available time slots for a specific doctor.
+        /// </summary>
+        /// <param name="doctorId">The unique identifier of the doctor.</param>
+        /// <returns>A collection of available time slots for the specified doctor.</returns>
+        public async Task<IEnumerable<TimeSlot>> GetAvailableTimeSlotsByDoctorAsync(Guid doctorId)
+        {
+            return await _timeSlotRepository.GetAvailableTimeSlotsByDoctorAsync(doctorId);
         }
 
         /// <summary>

@@ -5,20 +5,37 @@
 @url = http://localhost:5083
 
 ### Get Time Slot by ID ###
-GET {{url}}/api/timeslots/6c7f905f-fe2f-4c85-81b5-1de09c12b2aa
+GET {{url}}/api/timeslot/6c7f905f-fe2f-4c85-81b5-1de09c12b2aa
 Content-Type: application/json
 
+### Get All Time Slots ##
+GET {{url}}/api/timeslot
+
+### Get All Available Time Slots ###
+GET {{url}}/api/timeslot/available
+
 ### Get Time Slots by Doctor ID ###
-GET {{url}}/api/timeslots/doctors/c5021196-ffba-4bf6-917a-61a6702c16e6
+GET {{url}}/api/timeslot/doctors/c5021196-ffba-4bf6-917a-61a6702c16e6
+
+### Get Available Time Slots by Doctor ID ###
+GET {{url}}/api/timeslot/doctors/c5021196-ffba-4bf6-917a-61a6702c16e6/available
 
 ### Add Time Slot for Doctor ###
-POST {{url}}/api/timeslots/doctors/c5021196-ffba-4bf6-917a-61a6702c16e6/add
+POST {{url}}/api/timeslot/doctors/c5021196-ffba-4bf6-917a-61a6702c16e6/add
 Content-Type: application/json
 
 {
-  "dateTimeString": "21/06/2023 10:00 AM",
-  "cost": 10.00
+  "timeString": "21/06/2023 11:00 AM",
+  "cost": 5.00
+}
+
+### Update Time Slot ##
+PUT {{url}}/api/timeslot/b022a7fc-3dad-453e-b533-42c338475b0c
+Content-Type: application/json
+
+{
+  "isReserved": true
 }
 
 ### Delete Time Slot ###
-DELETE {{url}}/api/timeslots/6c7f905f-fe2f-4c85-81b5-1de09c12b2aa
+DELETE {{url}}/api/timeslot/6c7f905f-fe2f-4c85-81b5-1de09c12b2aa
