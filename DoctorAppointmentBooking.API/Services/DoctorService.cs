@@ -68,6 +68,11 @@
         /// <param name="doctor">The doctor to update.</param>
         public async Task UpdateDoctorAsync(Doctor doctor)
         {
+            var exists = await _doctorRepository.DoctorExistsAsync(doctor.Id);
+            if (!exists)
+            {
+                throw new InvalidOperationException($"A doctor with ID {doctor.Id} does not exists.");
+            }
             await _doctorRepository.UpdateDoctorAsync(doctor);
         }
 
@@ -80,5 +85,4 @@
             await _doctorRepository.DeleteDoctorAsync(id);
         }
     }
-
 }

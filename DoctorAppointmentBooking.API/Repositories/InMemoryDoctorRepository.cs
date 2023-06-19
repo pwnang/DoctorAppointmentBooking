@@ -11,7 +11,9 @@
     /// </summary>
     public class InMemoryDoctorRepository : IDoctorRepository
     {
-        // Stores the collection of doctors in memory
+        /// <summary>
+        /// Stores the collection of doctors in memory.
+        /// </summary>
         private readonly List<Doctor> _doctors;
 
         /// <summary>

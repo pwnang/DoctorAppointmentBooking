@@ -87,6 +87,11 @@
             return Ok(response);
         }
 
+        /// <summary>
+        /// Checks if a doctor exists with the specified ID.
+        /// </summary>
+        /// <param name="doctorId">The unique identifier of the doctor.</param>
+        /// <returns>An IActionResult representing the result of the check.</returns>
         [HttpGet("exists/{id}")]
         public async Task<IActionResult> CheckDoctorExists(Guid id)
         {
@@ -112,5 +117,4 @@
             return Ok(response);
         }
     }
-
 }
