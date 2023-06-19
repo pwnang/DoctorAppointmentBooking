@@ -1,0 +1,42 @@
+###
+### DoctorController API Requests
+###
+
+# Add a new doctor
+POST http://localhost:5083/api/doctor
+Content-Type: application/json
+
+{
+  "id": "c5021196-ffba-4bf6-917a-61a6702c16e6",
+  "name": "Dr. John Doe"
+}
+
+###
+
+GET http://localhost:5083/api/doctor/exists/c5021196-ffba-4bf6-917a-61a6702c16e6
+
+###
+
+# Retrieve a doctor by ID
+GET http://localhost:5083/api/doctor/c5021196-ffba-4bf6-917a-61a6702c16e6
+
+###
+
+# Retrieve all doctors
+GET http://localhost:5083/api/doctor
+
+###
+
+# Update an existing doctor
+PUT http://localhost:5083/api/doctor/c5021196-ffba-4bf6-917a-61a6702c16e6
+Content-Type: application/json
+
+{
+  "id": "c5021196-ffba-4bf6-917a-61a6702c16e6",
+  "name": "Dr. Jane Smith"
+}
+
+###
+
+# Delete a doctor by ID
+DELETE http://localhost:5083/api/doctor/c5021196-ffba-4bf6-917a-61a6702c16e6

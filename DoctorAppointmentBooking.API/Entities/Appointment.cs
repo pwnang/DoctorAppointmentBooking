@@ -1,4 +1,4 @@
-﻿namespace DoctorAppointmentBooking.API.Models
+﻿namespace DoctorAppointmentBooking.API.Entities
 {
     /// <summary>
     /// Class representing an appointment.
