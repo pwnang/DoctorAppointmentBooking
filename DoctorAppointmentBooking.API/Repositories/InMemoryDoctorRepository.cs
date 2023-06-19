@@ -39,9 +39,9 @@
         /// </summary>
         /// <param name="id">The ID of the doctor.</param>
         /// <returns>True if a doctor with the specified ID exists; otherwise, false.</returns>
-        public Task<bool> DoctorExistsAsync(Guid id)
+        public async Task<bool> DoctorExistsAsync(Guid id)
         {
-            return Task.FromResult(_doctors.Any(d => d.Id == id));
+            return await Task.FromResult(_doctors.Any(d => d.Id == id));
         }
 
         /// <summary>
@@ -50,7 +50,7 @@
         /// <returns>A collection of all doctors.</returns>
         public async Task<IEnumerable<Doctor>> GetAllDoctorsAsync()
         {
-            return await Task.Run(() => _doctors.ToList());
+            return await Task.FromResult<IEnumerable<Doctor>>(_doctors);
         }
 
         /// <summary>

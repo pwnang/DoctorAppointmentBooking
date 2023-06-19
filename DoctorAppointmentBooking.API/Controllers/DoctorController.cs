@@ -1,12 +1,9 @@
-﻿namespace DoctorAppointmentBooking.API.Controllers
-{
-    using System;
-    using System.Collections.Generic;
-    using System.Threading.Tasks;
-    using DoctorAppointmentBooking.API.Entities;
-    using DoctorAppointmentBooking.API.Services;
-    using Microsoft.AspNetCore.Mvc;
+﻿using DoctorAppointmentBooking.API.Entities;
+using DoctorAppointmentBooking.API.Services;
+using Microsoft.AspNetCore.Mvc;
 
+namespace DoctorAppointmentBooking.API.Controllers
+{
     [ApiController]
     [Route("api/[controller]")]
     public class DoctorController : ControllerBase
@@ -73,18 +70,16 @@
         {
             if (id != doctor.Id)
             {
-                return BadRequest();
+                return BadRequest("Doctor ID mismatch.");
+            }
+
+            if (!await _doctorService.DoctorExistsAsync(id))
+            {
+                return NotFound();
             }
 
             await _doctorService.UpdateDoctorAsync(doctor);
-
-            var response = new
-            {
-                Message = $"Doctor with {id} was updated successfully",
-                UpdatedDoctor = doctor
-            };
-
-            return Ok(response);
+            return Ok(doctor);
         }
 
         /// <summary>
@@ -107,11 +102,16 @@
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteDoctor(Guid id)
         {
+            if (!await _doctorService.DoctorExistsAsync(id))
+            {
+                return NotFound();
+            }
+
             await _doctorService.DeleteDoctorAsync(id);
 
             var response = new
             {
-                Message = $"Doctor with {id} was deleted successfully"
+                Message = $"Doctor with {id} was deleted successfully,"
             };
 
             return Ok(response);

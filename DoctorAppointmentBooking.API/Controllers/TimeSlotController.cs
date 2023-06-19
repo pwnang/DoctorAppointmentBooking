@@ -7,7 +7,7 @@ using System.Text.Json;
 namespace DoctorAppointmentBooking.API.Controllers
 {
     [ApiController]
-    [Route("api/timeslots")]
+    [Route("api/[controller]")]
     public class TimeSlotController : ControllerBase
     {
         private readonly ITimeSlotService _timeSlotService;

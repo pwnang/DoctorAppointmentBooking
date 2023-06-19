@@ -9,6 +9,9 @@ builder.Services.AddScoped<IDoctorService, DoctorService>();
 builder.Services.AddSingleton<ITimeSlotRepository, InMemoryTimeSlotRepository>();
 builder.Services.AddScoped<ITimeSlotService, TimeSlotService>();
 
+builder.Services.AddSingleton<IPatientRepository, InMemoryPatientRepository>();
+builder.Services.AddScoped<IPatientService, PatientService>();
+
 builder.Services.AddControllers();
 
 var app = builder.Build();
