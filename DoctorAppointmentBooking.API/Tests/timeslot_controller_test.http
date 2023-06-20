@@ -28,12 +28,12 @@ POST {{url}}/doctors/c5021196-ffba-4bf6-917a-61a6702c16e6/add
 Content-Type: application/json
 
 {
-  "time": "21/06/2023 11:00 AM",
+  "time": "21/06/2023 09:00 AM",
   "cost": 5.00
 }
 
 ### Update Time Slot ##
-PUT {{url}}/63f27b86-81b3-4241-a0d2-6ab46d36253f
+PUT {{url}}/03b28cdb-d227-4ca3-990b-80a01942452f
 Content-Type: application/json
 
 {

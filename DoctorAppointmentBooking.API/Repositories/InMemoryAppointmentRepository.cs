@@ -52,6 +52,21 @@ namespace DoctorAppointmentBooking.API.Repositories
         }
 
         /// <summary>
+        /// Retrieves the appointments associated with the provided list of time slot GUIDs.
+        /// </summary>
+        /// <param name="timeSlotIds">The list of time slot GUIDs.</param>
+        /// <returns>The appointments associated with the specified time slots.</returns>
+        public async Task<IEnumerable<Appointment>> GetUpcomingAppointmentsByTimeSlotsAsync(IEnumerable<Guid> timeSlotIds)
+        {
+            var appointments = _appointments.Where(appointment =>
+            {
+                return appointment.Status == Appointment.EStatus.Scheduled && 
+                    timeSlotIds.Contains(appointment.SlotId);
+            });
+            return await Task.FromResult(appointments);
+        }
+
+        /// <summary>
         /// Checks if an appointment with the specified ID exists.
         /// </summary>
         /// <param name="id">The ID of the appointment.</param>
@@ -65,7 +80,7 @@ namespace DoctorAppointmentBooking.API.Repositories
         /// Updates an existing appointment in the repository.
         /// </summary>
         /// <param name="appointment">The appointment to update.</param>
-        public async Task UpdateAppointmentAsync(Appointment appointment)
+        public async Task<Appointment?> UpdateAppointmentAsync(Appointment appointment)
         {
             var existingAppointment = await GetAppointmentByIdAsync(appointment.Id);
             if (existingAppointment != null)
@@ -76,7 +91,11 @@ namespace DoctorAppointmentBooking.API.Repositories
                 existingAppointment.ReservedAt = appointment.ReservedAt;
                 existingAppointment.Status = appointment.Status;
                 existingAppointment.UpdatedAt = DateTime.Now;
+
+                return existingAppointment;
             }
+
+            return null;
         }
 
         /// <summary>

@@ -35,6 +35,13 @@ namespace DoctorAppointmentBooking.API.Repositories
         Task<Appointment?> GetAppointmentByIdAsync(Guid id);
 
         /// <summary>
+        /// Retrieves the appointments associated with the provided list of time slot GUIDs.
+        /// </summary>
+        /// <param name="timeSlotIds">The list of time slot GUIDs.</param>
+        /// <returns>The appointments associated with the specified time slots.</returns>
+        Task<IEnumerable<Appointment>> GetUpcomingAppointmentsByTimeSlotsAsync(IEnumerable<Guid> timeSlotIds);
+
+        /// <summary>
         /// Checks if an appointment with the specified ID exists.
         /// </summary>
         /// <param name="id">The ID of the appointment.</param>
@@ -45,8 +52,8 @@ namespace DoctorAppointmentBooking.API.Repositories
         /// Updates an existing appointment in the repository.
         /// </summary>
         /// <param name="appointment">The appointment to update.</param>
-        /// <returns>A task representing the asynchronous update operation.</returns>
-        Task UpdateAppointmentAsync(Appointment appointment);
+        /// <returns>The updated appointment or null if appointment could not be found.</returns>
+        Task<Appointment?> UpdateAppointmentAsync(Appointment appointment);
 
         /// <summary>
         /// Deletes an appointment from the repository by its ID.

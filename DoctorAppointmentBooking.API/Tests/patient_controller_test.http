@@ -2,19 +2,19 @@
 ### PatientController API Requests
 ###
 
-@url = http://localhost:5083
+@url = http://localhost:5083/api/patient
 
 ###
 ### Get all patients
 ###
 
-GET {{url}}/api/patient
+GET {{url}}
 
 ###
 ### Add new patient
 ###
 
-POST {{url}}/api/patient
+POST {{url}}
 Content-Type: application/json
 
 {
@@ -25,23 +25,23 @@ Content-Type: application/json
 ### Check if patient exists
 ###
 
-GET {{url}}/api/patient/exists/dc0eccd7-ac3f-47f2-ba16-41d31fa03dad
+GET {{url}}/exists/4b0a2f88-de9f-4200-9cb3-a04bb70d1f74
 
 ###
 ### Get patient by ID
 ###
 
-GET {{url}}/api/patient/dc0eccd7-ac3f-47f2-ba16-41d31fa03dad
+GET {{url}}/4b0a2f88-de9f-4200-9cb3-a04bb70d1f74
 
 ###
 ### Update patient
 ###
 
-PUT {{url}}/api/patient/dc0eccd7-ac3f-47f2-ba16-41d31fa03dad
+PUT {{url}}/86365262-62af-44f0-9e00-f5d6cdabac66
 Content-Type: application/json
 
 {
-  "id": "dc0eccd7-ac3f-47f2-ba16-41d31fa03dad",
+  "id": "86365262-62af-44f0-9e00-f5d6cdabac66",
   "name": "John Smith"
 }
 
@@ -49,4 +49,4 @@ Content-Type: application/json
 ### Delete patient
 ###
 
-DELETE {{url}}/api/patient/dc0eccd7-ac3f-47f2-ba16-41d31fa03dad
+DELETE {{url}}/3540e4f8-2d77-40b9-bd28-9f38d2b7f6cd

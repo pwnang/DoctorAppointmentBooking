@@ -28,6 +28,13 @@ namespace DoctorAppointmentBooking.API.Services
         Task<IEnumerable<Appointment>> GetAllAppointmentsAsync();
 
         /// <summary>
+        /// Retrieves the appointments associated with the provided list of time slot GUIDs.
+        /// </summary>
+        /// <param name="timeSlotIds">The list of time slot GUIDs.</param>
+        /// <returns>The appointments associated with the specified time slots.</returns>
+        Task<IEnumerable<Appointment>> GetUpcomingAppointmentsByTimeSlotsAsync(IEnumerable<Guid> timeSlotIds);
+
+        /// <summary>
         /// Retrieves an appointment by its ID.
         /// </summary>
         /// <param name="id">The ID of the appointment.</param>
@@ -46,7 +53,7 @@ namespace DoctorAppointmentBooking.API.Services
         /// </summary>
         /// <param name="appointment">The appointment to update.</param>
         /// <returns>The updated appointment.</returns>
-        Task UpdateAppointmentAsync(Appointment appointment);
+        Task<Appointment?> UpdateAppointmentAsync(Appointment appointment);
 
         /// <summary>
         /// Deletes an appointment by its ID.

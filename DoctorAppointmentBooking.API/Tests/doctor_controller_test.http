@@ -2,10 +2,10 @@
 ### DoctorController API Requests
 ###
 
-@url = http://localhost:5083
+@url = http://localhost:5083/api/doctor
 
 # Add a new doctor
-POST {{url}}/api/doctor
+POST {{url}}
 Content-Type: application/json
 
 {
@@ -16,22 +16,22 @@ Content-Type: application/json
 ###
 
 # Check if doctor with specific ID exists
-GET {{url}}/api/doctor/exists/c5021196-ffba-4bf6-917a-61a6702c16e6
+GET {{url}}/exists/c5021196-ffba-4bf6-917a-61a6702c16e6
 
 ###
 
 # Retrieve a doctor by ID
-GET {{url}}/api/doctor/c5021196-ffba-4bf6-917a-61a6702c16e6
+GET {{url}}/c5021196-ffba-4bf6-917a-61a6702c16e6
 
 ###
 
 # Retrieve all doctors
-GET {{url}}/api/doctor
+GET {{url}}
 
 ###
 
 # Update an existing doctor
-PUT {{url}}/api/doctor/c5021196-ffba-4bf6-917a-61a6702c16e6
+PUT {{url}}/c5021196-ffba-4bf6-917a-61a6702c16e6
 Content-Type: application/json
 
 {
@@ -42,4 +42,4 @@ Content-Type: application/json
 ###
 
 # Delete a doctor by ID
-DELETE {{url}}/api/doctor/c5021196-ffba-4bf6-917a-61a6702c16e6
+DELETE {{url}}/c5021196-ffba-4bf6-917a-61a6702c16e6

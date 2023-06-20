@@ -14,13 +14,16 @@
         private readonly IAppointmentService _appointmentService;
         private readonly IPatientService _patientService;
         private readonly ITimeSlotService _timeSlotService;
+        private readonly IDoctorService _doctorService;
 
         public AppointmentController(IAppointmentService appointmentService, 
-            IPatientService patientService, ITimeSlotService timeSlotService)
+            IPatientService patientService, ITimeSlotService timeSlotService, 
+            IDoctorService doctorService)
         {
             _appointmentService = appointmentService;
             _patientService = patientService;
             _timeSlotService = timeSlotService;
+            _doctorService = doctorService;
         }
 
         /// <summary>
@@ -193,6 +196,28 @@
         }
 
         /// <summary>
+        /// Retrieves all appointments associated with a specific doctor.
+        /// </summary>
+        /// <param name="doctorId">The ID of the doctor.</param>
+        /// <returns>A collection of appointments associated with the specified doctor.</returns>
+        [HttpGet("doctor/{doctorId}")]
+        public async Task<ActionResult<IEnumerable<Appointment>>> GetDoctorUpcomingAppointmentsAsync(Guid doctorId)
+        {
+            var doctorExists = await _doctorService.DoctorExistsAsync(doctorId);
+            if (!doctorExists)
+            {
+                return NotFound($"Doctor with ID {doctorId} not found.");
+            }
+
+            var timeSlots = await _timeSlotService.GetDoctorReservedTimeSlotsAsync(doctorId);
+            var appointments = await _appointmentService.GetUpcomingAppointmentsByTimeSlotsAsync(timeSlots
+                .ToList()
+                .Select(timeSlot => timeSlot.Id));
+            
+            return Ok(appointments);
+        }
+
+        /// <summary>
         /// Deletes an appointment by its ID.
         /// </summary>
         /// <param name="id">The ID of the appointment to delete.</param>
@@ -216,5 +241,4 @@
             }
         }
     }
-
 }

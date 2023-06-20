@@ -43,6 +43,16 @@ namespace DoctorAppointmentBooking.API.Services
         }
 
         /// <summary>
+        /// Retrieves the appointments associated with the provided list of time slot GUIDs.
+        /// </summary>
+        /// <param name="timeSlotIds">The list of time slot GUIDs.</param>
+        /// <returns>The appointments associated with the specified time slots.</returns>
+        public async Task<IEnumerable<Appointment>> GetUpcomingAppointmentsByTimeSlotsAsync(IEnumerable<Guid> timeSlotIds)
+        {
+            return await _appointmentRepository.GetUpcomingAppointmentsByTimeSlotsAsync(timeSlotIds);
+        }
+
+        /// <summary>
         /// Retrieves an appointment by its ID.
         /// </summary>
         /// <param name="id">The ID of the appointment.</param>
@@ -67,9 +77,9 @@ namespace DoctorAppointmentBooking.API.Services
         /// </summary>
         /// <param name="appointment">The appointment to update.</param>
         /// <returns>The updated appointment.</returns>
-        public async Task UpdateAppointmentAsync(Appointment appointment)
+        public async Task<Appointment?> UpdateAppointmentAsync(Appointment appointment)
         {
-            await _appointmentRepository.UpdateAppointmentAsync(appointment);
+            return await _appointmentRepository.UpdateAppointmentAsync(appointment);
         }
 
         /// <summary>
