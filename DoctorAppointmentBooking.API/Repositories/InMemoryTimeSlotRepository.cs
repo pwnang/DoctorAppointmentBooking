@@ -95,5 +95,15 @@ namespace DoctorAppointmentBooking.API.Repositories
                 _timeSlots.Remove(timeSlotToRemove);
             }
         }
+
+        /// <summary>
+        /// Retrieves all reserved time slots for a specific doctor.
+        /// </summary>
+        /// <param name="doctorId">The unique identifier of the doctor.</param>
+        /// <returns>A collection of reserved time slots for the specified doctor.</returns>
+        public async Task<IEnumerable<TimeSlot>> GetDoctorReservedTimeSlotsAsync(Guid doctorId)
+        {
+            return await Task.Run(() => _timeSlots.Where(timeSlot => timeSlot.DoctorId == doctorId && timeSlot.IsReserved));
+        }
     }
 }

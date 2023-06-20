@@ -73,6 +73,24 @@ namespace DoctorAppointmentBooking.API.Controllers
         }
 
         /// <summary>
+        /// Retrieves all reserved time slots associated with a specific doctor.
+        /// </summary>
+        /// <param name="doctorId">The ID of the doctor.</param>
+        /// <returns>A collection of reserved time slots for the specified doctor.</returns>
+        [HttpGet("doctors/{doctorId}/reserved")]
+        public async Task<ActionResult<IEnumerable<TimeSlot>>> GetDoctorReservedTimeSlotsAsync(Guid doctorId)
+        {
+            var doctorExists = await _doctorService.DoctorExistsAsync(doctorId);
+            if (!doctorExists)
+            {
+                return NotFound($"Doctor with ID {doctorId} not found.");
+            }
+
+            var reservedTimeSlots = await _timeSlotService.GetDoctorReservedTimeSlotsAsync(doctorId);
+            return Ok(reservedTimeSlots);
+        }
+
+        /// <summary>
         /// Adds a new time slot for a specific doctor.
         /// </summary>
         /// <param name="doctorId">The unique identifier of the doctor.</param>

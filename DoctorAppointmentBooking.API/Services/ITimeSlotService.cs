@@ -41,6 +41,13 @@ namespace DoctorAppointmentBooking.API.Services
         Task<IEnumerable<TimeSlot>> GetAvailableTimeSlotsByDoctorAsync(Guid doctorId);
 
         /// <summary>
+        /// Retrieves all reserved time slots for a specific doctor.
+        /// </summary>
+        /// <param name="doctorId">The unique identifier of the doctor.</param>
+        /// <returns>A collection of reserved time slots for the specified doctor.</returns>
+        Task<IEnumerable<TimeSlot>> GetDoctorReservedTimeSlotsAsync(Guid doctorId);
+
+        /// <summary>
         /// Adds a new time slot.
         /// </summary>
         /// <param name="timeSlot">The time slot to add.</param>
