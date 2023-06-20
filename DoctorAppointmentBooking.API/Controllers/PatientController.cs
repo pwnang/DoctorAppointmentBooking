@@ -70,15 +70,12 @@ namespace DoctorAppointmentBooking.API.Controllers
         [HttpPut("{id}")]
         public async Task<IActionResult> UpdatePatient(Guid id, Patient patient)
         {
-            if (id != patient.Id)
-            {
-                return BadRequest("Patient ID mismatch.");
-            }
-
             if (!await _patientService.PatientExistsAsync(id))
             {
                 return NotFound();
             }
+
+            patient.Id = id;
 
             try
             {

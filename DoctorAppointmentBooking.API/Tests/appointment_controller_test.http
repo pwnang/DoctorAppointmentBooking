@@ -6,8 +6,8 @@ POST {{url}}
 Content-Type: application/json
 
 {
-  "slotId": "427482de-c901-4a82-9908-b32ccef331b3",
-  "patientId": "86365262-62af-44f0-9e00-f5d6cdabac66"
+  "slotId": "f6fd0552-6449-4e52-9113-0398e3a2d32e",
+  "patientId": "7f671378-f0d2-46a1-bb2e-750b64b2d9f5"
 }
 
 ### Get all appointments ###
@@ -20,11 +20,11 @@ GET {{url}}/ba5c2b37-46bc-4788-b171-e0748d9ed847
 
 ### Get Doctor Appointments ###
 
-GET {{url}}/doctor/c5021196-ffba-4bf6-917a-61a6702c16e6
+GET {{url}}/doctor/3556301e-2993-4dfd-8259-701c2e8dd1e9
 
 ### Update an appointment ###
 
-PUT {{url}}/04017947-62c1-420d-a4a9-2c64f65b3722
+PUT {{url}}/e020e5d7-79a7-4b32-b31e-9e652a8a2001
 Content-Type: application/json
 
 {

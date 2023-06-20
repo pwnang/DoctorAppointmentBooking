@@ -9,19 +9,18 @@ POST {{url}}
 Content-Type: application/json
 
 {
-  "id": "c5021196-ffba-4bf6-917a-61a6702c16e6",
-  "name": "Dr. John Doe"
+  "name": "Dr. John Woe"
 }
 
 ###
 
 # Check if doctor with specific ID exists
-GET {{url}}/exists/c5021196-ffba-4bf6-917a-61a6702c16e6
+GET {{url}}/exists/f5b7c72e-4eea-4ef3-aff8-f48ab4cbb1d3
 
 ###
 
 # Retrieve a doctor by ID
-GET {{url}}/c5021196-ffba-4bf6-917a-61a6702c16e6
+GET {{url}}/f5b7c72e-4eea-4ef3-aff8-f48ab4cbb1d3
 
 ###
 
@@ -31,15 +30,14 @@ GET {{url}}
 ###
 
 # Update an existing doctor
-PUT {{url}}/c5021196-ffba-4bf6-917a-61a6702c16e6
+PUT {{url}}/3556301e-2993-4dfd-8259-701c2e8dd1e9
 Content-Type: application/json
 
 {
-  "id": "c5021196-ffba-4bf6-917a-61a6702c16e6",
   "name": "Dr. Jane Smith"
 }
 
 ###
 
 # Delete a doctor by ID
-DELETE {{url}}/c5021196-ffba-4bf6-917a-61a6702c16e6
+DELETE {{url}}/f5b7c72e-4eea-4ef3-aff8-f48ab4cbb1d3

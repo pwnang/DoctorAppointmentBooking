@@ -184,6 +184,8 @@
                     return BadRequest("Appointment ID mismatch.");
                 }
 
+                appointmentDto.UpdatedAt = DateTime.Now;
+
                 await SyncAppointmentDtoWithData(appointmentDto, existingAppointment);
 
                 await _appointmentService.UpdateAppointmentAsync(existingAppointment);

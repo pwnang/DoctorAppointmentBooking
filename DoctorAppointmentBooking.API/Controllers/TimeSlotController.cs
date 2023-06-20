@@ -170,7 +170,7 @@ namespace DoctorAppointmentBooking.API.Controllers
             // Sync the properties from the DTO to the existing TimeSlot
             if (timeSlotDto.Time.HasValue)
             {
-                timeSlot.Time = timeSlotDto.Time.Value;
+                timeSlot.Time = timeSlotDto.Time.Value.ToUniversalTime();
             }
 
             if (timeSlotDto.DoctorId.HasValue)

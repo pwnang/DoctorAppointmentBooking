@@ -15,20 +15,20 @@ GET {{url}}
 GET {{url}}/available
 
 ### Get Time Slots by Doctor ID ###
-GET {{url}}/doctors/c5021196-ffba-4bf6-917a-61a6702c16e6
+GET {{url}}/doctors/3556301e-2993-4dfd-8259-701c2e8dd1e9
 
 ### Get Available Time Slots by Doctor ID ###
-GET {{url}}/doctors/c5021196-ffba-4bf6-917a-61a6702c16e6/available
+GET {{url}}/doctors/3556301e-2993-4dfd-8259-701c2e8dd1e9/available
 
 ### Get Reserved Time Slots by Doctor ID ###
-GET {{url}}/doctors/c5021196-ffba-4bf6-917a-61a6702c16e6/reserved
+GET {{url}}/doctors/3556301e-2993-4dfd-8259-701c2e8dd1e9/reserved
 
 ### Add Time Slot for Doctor ###
-POST {{url}}/doctors/c5021196-ffba-4bf6-917a-61a6702c16e6/add
+POST {{url}}/doctors/3556301e-2993-4dfd-8259-701c2e8dd1e9/add
 Content-Type: application/json
 
 {
-  "time": "21/06/2023 09:00 AM",
+  "time": "21/06/2023 12:00 PM",
   "cost": 5.00
 }
 
