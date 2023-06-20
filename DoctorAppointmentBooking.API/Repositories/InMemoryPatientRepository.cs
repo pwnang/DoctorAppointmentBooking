@@ -45,26 +45,28 @@ namespace DoctorAppointmentBooking.API.Repositories
         /// Adds a new patient.
         /// </summary>
         /// <param name="patient">The patient to add.</param>
-        public async Task AddPatientAsync(Patient patient)
+        public async Task<Patient> AddPatientAsync(Patient patient)
         {
             await Task.Run(() => _patients.Add(patient));
+            return patient;
         }
 
         /// <summary>
         /// Updates an existing patient.
         /// </summary>
         /// <param name="patient">The patient to update.</param>
-        public async Task UpdatePatientAsync(Patient patient)
+        public async Task<Patient?> UpdatePatientAsync(Patient patient)
         {
-            await Task.Run(() =>
+            var existingPatient = await Task.Run(() => _patients.FirstOrDefault(p => p.Id == patient.Id));
+            if (existingPatient != null)
             {
-                var existingPatient = _patients.FirstOrDefault(p => p.Id == patient.Id);
-                if (existingPatient != null)
-                {
-                    // Update the patient properties
-                    existingPatient.Name = patient.Name;
-                }
-            });
+                // Update the patient properties
+                existingPatient.Name = patient.Name;
+
+                return existingPatient;
+            }
+
+            return null;
         }
 
         /// <summary>

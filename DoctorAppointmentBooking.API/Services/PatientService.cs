@@ -50,28 +50,29 @@ namespace DoctorAppointmentBooking.API.Services
         /// Adds a new patient.
         /// </summary>
         /// <param name="patient">The patient to add.</param>
-        public async Task AddPatientAsync(Patient patient)
+        public async Task<Patient> AddPatientAsync(Patient patient)
         {
             var exists = await _patientRepository.PatientExistsAsync(patient.Id);
             if (exists)
             {
                 throw new InvalidOperationException($"A patient with ID {patient.Id} already exists.");
             }
-            await _patientRepository.AddPatientAsync(patient);
+            return await _patientRepository.AddPatientAsync(patient);
         }
 
         /// <summary>
         /// Updates an existing patient.
         /// </summary>
         /// <param name="patient">The patient to update.</param>
-        public async Task UpdatePatientAsync(Patient patient)
+        public async Task<Patient?> UpdatePatientAsync(Patient patient)
         {
             var exists = await _patientRepository.PatientExistsAsync(patient.Id);
             if (!exists)
             {
                 throw new InvalidOperationException($"A patient with ID {patient.Id} does not exists.");
             }
-            await _patientRepository.UpdatePatientAsync(patient);
+            
+            return await _patientRepository.UpdatePatientAsync(patient);
         }
 
         /// <summary>

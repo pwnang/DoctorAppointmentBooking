@@ -31,13 +31,15 @@ namespace DoctorAppointmentBooking.API.Services
         /// Adds a new doctor.
         /// </summary>
         /// <param name="doctor">The doctor to add.</param>
-        Task AddDoctorAsync(Doctor doctor);
+        /// <returns>The added doctor.</returns>
+        Task<Doctor> AddDoctorAsync(Doctor doctor);
 
         /// <summary>
         /// Updates an existing doctor.
         /// </summary>
         /// <param name="doctor">The doctor to update.</param>
-        Task UpdateDoctorAsync(Doctor doctor);
+        /// <returns>The updated doctor or null if doctor was not found.</returns>
+        Task<Doctor?> UpdateDoctorAsync(Doctor doctor);
 
         /// <summary>
         /// Deletes a doctor by their ID.

@@ -52,28 +52,30 @@
         /// Adds a new doctor asynchronously.
         /// </summary>
         /// <param name="doctor">The doctor to add.</param>
-        public async Task AddDoctorAsync(Doctor doctor)
+        /// <returns>The added doctor.</returns>
+        public async Task<Doctor> AddDoctorAsync(Doctor doctor)
         {
             var exists = await _doctorRepository.DoctorExistsAsync(doctor.Id);
             if (exists)
             {
                 throw new InvalidOperationException($"A doctor with ID {doctor.Id} already exists.");
             }
-            await _doctorRepository.AddDoctorAsync(doctor);
+            return await _doctorRepository.AddDoctorAsync(doctor);
         }
 
         /// <summary>
         /// Updates an existing doctor asynchronously.
         /// </summary>
         /// <param name="doctor">The doctor to update.</param>
-        public async Task UpdateDoctorAsync(Doctor doctor)
+        /// <returns>The updated doctor or null if doctor was not found.</returns>
+        public async Task<Doctor?> UpdateDoctorAsync(Doctor doctor)
         {
             var exists = await _doctorRepository.DoctorExistsAsync(doctor.Id);
             if (!exists)
             {
                 throw new InvalidOperationException($"A doctor with ID {doctor.Id} does not exists.");
             }
-            await _doctorRepository.UpdateDoctorAsync(doctor);
+            return await _doctorRepository.UpdateDoctorAsync(doctor);
         }
 
         /// <summary>

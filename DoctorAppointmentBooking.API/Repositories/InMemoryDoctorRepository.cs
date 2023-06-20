@@ -57,25 +57,30 @@
         /// Adds a new doctor asynchronously.
         /// </summary>
         /// <param name="doctor">The doctor to add.</param>
-        public async Task AddDoctorAsync(Doctor doctor)
+        /// <returns>The added doctor.</returns>
+        public async Task<Doctor> AddDoctorAsync(Doctor doctor)
         {
             await Task.Run(() => _doctors.Add(doctor));
+
+            return doctor;
         }
 
         /// <summary>
         /// Updates an existing doctor asynchronously.
         /// </summary>
         /// <param name="doctor">The doctor to update.</param>
-        public async Task UpdateDoctorAsync(Doctor doctor)
+        /// <returns>The updated doctor or null if doctor was not found.</returns>
+        public async Task<Doctor?> UpdateDoctorAsync(Doctor doctor)
         {
-            await Task.Run(() =>
+            var existingDoctor = await Task.Run(() => _doctors.FirstOrDefault(d => d.Id == doctor.Id));
+            if (existingDoctor != null)
             {
-                var existingDoctor = _doctors.FirstOrDefault(d => d.Id == doctor.Id);
-                if (existingDoctor != null)
-                {
-                    existingDoctor.Name = doctor.Name;
-                }
-            });
+                existingDoctor.Name = doctor.Name;
+
+                return existingDoctor;
+            }
+
+            return null;
         }
 
         /// <summary>

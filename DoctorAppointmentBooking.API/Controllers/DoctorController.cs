@@ -85,12 +85,15 @@ namespace DoctorAppointmentBooking.API.Controllers
             {
                 await _doctorService.UpdateDoctorAsync(doctor);
 
-                var timeSlots = await _timeSlotService.GetTimeSlotsByDoctorAsync(id);
-                foreach (var timeSlot in timeSlots)
+                if (!string.IsNullOrWhiteSpace(doctor.Name))
                 {
-                    timeSlot.DoctorName = doctor.Name;
+                    var timeSlots = await _timeSlotService.GetTimeSlotsByDoctorAsync(id);
+                    foreach (var timeSlot in timeSlots)
+                    {
+                        timeSlot.DoctorName = doctor.Name;
+                    }
+                    await _timeSlotService.UpdateTimeSlotsAsync(timeSlots);
                 }
-                await _timeSlotService.UpdateTimeSlotsAsync(timeSlots);
             }
             catch (Exception ex)
             {

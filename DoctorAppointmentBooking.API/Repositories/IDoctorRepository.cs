@@ -37,13 +37,15 @@ namespace DoctorAppointmentBooking.API.Repositories
         /// Adds a new doctor asynchronously.
         /// </summary>
         /// <param name="doctor">The doctor to add.</param>
-        Task AddDoctorAsync(Doctor doctor);
+        /// <returns>The added doctor.</returns>
+        Task<Doctor> AddDoctorAsync(Doctor doctor);
 
         /// <summary>
         /// Updates an existing doctor asynchronously.
         /// </summary>
         /// <param name="doctor">The doctor to update.</param>
-        Task UpdateDoctorAsync(Doctor doctor);
+        /// <returns>The updated doctor or null if doctor was not found.</returns>
+        Task<Doctor?> UpdateDoctorAsync(Doctor doctor);
 
         /// <summary>
         /// Deletes a doctor by their unique identifier asynchronously.

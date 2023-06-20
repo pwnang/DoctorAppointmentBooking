@@ -9,14 +9,16 @@ namespace DoctorAppointmentBooking.API.Controllers
     public class PatientController : ControllerBase
     {
         private readonly IPatientService _patientService;
+        private readonly IAppointmentService _appointmentService;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="PatientController"/> class.
         /// </summary>
         /// <param name="patientService">The patient service.</param>
-        public PatientController(IPatientService patientService)
+        public PatientController(IPatientService patientService, IAppointmentService appointmentService)
         {
             _patientService = patientService;
+            _appointmentService = appointmentService;
         }
 
         /// <summary>
@@ -78,7 +80,26 @@ namespace DoctorAppointmentBooking.API.Controllers
                 return NotFound();
             }
 
-            await _patientService.UpdatePatientAsync(patient);
+            try
+            {
+                await _patientService.UpdatePatientAsync(patient);
+
+                // if patient.Name is not null or whitespace, update the patient name for all appointments
+                if (!string.IsNullOrWhiteSpace(patient.Name))
+                {
+                    var appointments = await _appointmentService.GetPatientAppointmentsAsync(id);
+                    foreach (var appointment in appointments)
+                    {
+                        appointment.PatientName = patient.Name;
+                        await _appointmentService.UpdateAppointmentAsync(appointment);
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                BadRequest($"An error occured while updating patient with ID \"{id}\": {ex.Message}");
+            }
+
             return Ok(patient);
         }
 
