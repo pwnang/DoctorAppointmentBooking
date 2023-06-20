@@ -1,4 +1,8 @@
-﻿namespace DoctorAppointmentBooking.API.Entities
+﻿using DoctorAppointmentBooking.API.Converters;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Converters;
+
+namespace DoctorAppointmentBooking.API.Entities
 {
     /// <summary>
     /// Class representing an appointment.
@@ -47,16 +51,19 @@
         /// <summary>
         /// Timestamp when the appointment was reserved.
         /// </summary>
-        public DateTime ReserverdAt { get; set; } = DateTime.Now;
+        [JsonConverter(typeof(CustomDateTimeConverter), "dd/MM/yyyy hh:mm tt")]
+        public DateTime ReservedAt { get; set; } = DateTime.Now;
 
         /// <summary>
         /// Current status of the appointment.
         /// </summary>
+        [JsonConverter(typeof(StringEnumConverter))]
         public EStatus Status { get; set; } = EStatus.Scheduled;
 
         /// <summary>
         /// Timestamp when the appointment was updated.
         /// </summary>
+        [JsonConverter(typeof(CustomDateTimeConverter), "dd/MM/yyyy hh:mm tt")]
         public DateTime UpdatedAt { get; set; } = DateTime.Now;
     }
 }

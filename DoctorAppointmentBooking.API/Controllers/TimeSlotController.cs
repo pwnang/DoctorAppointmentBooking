@@ -2,8 +2,6 @@
 using DoctorAppointmentBooking.API.Entities;
 using DoctorAppointmentBooking.API.Services;
 using Microsoft.AspNetCore.Mvc;
-using System.Globalization;
-using System.Text.Json;
 
 namespace DoctorAppointmentBooking.API.Controllers
 {
@@ -123,7 +121,7 @@ namespace DoctorAppointmentBooking.API.Controllers
 
             // if ID was set in Dto, assume it is for validation purpose since
             // we do not allow user to update existing ID manually
-            if (timeSlotDto.Id.HasValue && id != timeSlotDto.Id)
+            if (timeSlotDto.Id.HasValue && id != timeSlotDto.Id.Value)
             {
                 return BadRequest("Time slot ID mismatch.");
             }
@@ -149,22 +147,12 @@ namespace DoctorAppointmentBooking.API.Controllers
         /// <param name="timeSlot">The TimeSlot instance to be updated.</param>
         private async Task<TimeSlot> SyncTimeSlotDtoWithData(TimeSlotDto timeSlotDto, TimeSlot timeSlot)
         {
+            if (timeSlotDto == null) return timeSlot;
+
             // Sync the properties from the DTO to the existing TimeSlot
             if (timeSlotDto.Time.HasValue)
             {
                 timeSlot.Time = timeSlotDto.Time.Value;
-            }
-            else if (!string.IsNullOrWhiteSpace(timeSlotDto.TimeString))
-            {
-                if (DateTime.TryParseExact(timeSlotDto.TimeString, timeSlotDto.TimeFormat,
-                    CultureInfo.InvariantCulture, DateTimeStyles.None, out DateTime parsedTime))
-                {
-                    timeSlot.Time = parsedTime;
-                }
-                else
-                {
-                    throw new ArgumentException("Invalid date and time format.");
-                }
             }
 
             if (timeSlotDto.DoctorId.HasValue)

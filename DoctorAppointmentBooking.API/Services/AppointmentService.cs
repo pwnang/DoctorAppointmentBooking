@@ -1,57 +1,84 @@
 ﻿using DoctorAppointmentBooking.API.Entities;
+using DoctorAppointmentBooking.API.Repositories;
 
 namespace DoctorAppointmentBooking.API.Services
 {
-    /// <summary>
-    /// Service interface for managing appointments.
-    /// </summary>
-    public interface IAppointmentService
+    public class AppointmentService : IAppointmentService
     {
+        private readonly IAppointmentRepository _appointmentRepository;
+
+        public AppointmentService(IAppointmentRepository appointmentRepository)
+        {
+            _appointmentRepository = appointmentRepository;
+        }
+
         /// <summary>
         /// Creates a new appointment.
         /// </summary>
         /// <param name="appointment">The appointment to create.</param>
         /// <returns>The created appointment.</returns>
-        Task<Appointment> CreateAppointmentAsync(Appointment appointment);
+        public async Task<Appointment> CreateAppointmentAsync(Appointment appointment)
+        {
+            await _appointmentRepository.AddAppointmentAsync(appointment);
+            return appointment;
+        }
 
         /// <summary>
         /// Retrieves the appointments associated with a specific patient.
         /// </summary>
         /// <param name="patientId">The ID of the patient.</param>
         /// <returns>The appointments associated with the specified patient.</returns>
-        Task<IEnumerable<Appointment>> GetPatientAppointmentsAsync(Guid patientId);
+        public async Task<IEnumerable<Appointment>> GetPatientAppointmentsAsync(Guid patientId)
+        {
+            return await _appointmentRepository.GetAppointmentsByPatientAsync(patientId);
+        }
 
         /// <summary>
         /// Retrieves all appointments.
         /// </summary>
         /// <returns>All appointments.</returns>
-        Task<IEnumerable<Appointment>> GetAllAppointmentsAsync();
+        public async Task<IEnumerable<Appointment>> GetAllAppointmentsAsync()
+        {
+            return await _appointmentRepository.GetAllAppointmentsAsync();
+        }
 
         /// <summary>
         /// Retrieves an appointment by its ID.
         /// </summary>
         /// <param name="id">The ID of the appointment.</param>
         /// <returns>The appointment with the specified ID.</returns>
-        Task<Appointment?> GetAppointmentByIdAsync(Guid id);
+        public async Task<Appointment?> GetAppointmentByIdAsync(Guid id)
+        {
+            return await _appointmentRepository.GetAppointmentByIdAsync(id);
+        }
 
         /// <summary>
         /// Checks if an appointment with the specified ID exists.
         /// </summary>
         /// <param name="id">The ID of the appointment.</param>
         /// <returns>True if the appointment exists, false otherwise.</returns>
-        Task<bool> AppointmentExistsAsync(Guid id);
+        public async Task<bool> AppointmentExistsAsync(Guid id)
+        {
+            return await _appointmentRepository.AppointmentExistsAsync(id);
+        }
 
         /// <summary>
         /// Updates an existing appointment.
         /// </summary>
         /// <param name="appointment">The appointment to update.</param>
         /// <returns>The updated appointment.</returns>
-        Task UpdateAppointmentAsync(Appointment appointment);
+        public async Task UpdateAppointmentAsync(Appointment appointment)
+        {
+            await _appointmentRepository.UpdateAppointmentAsync(appointment);
+        }
 
         /// <summary>
         /// Deletes an appointment by its ID.
         /// </summary>
         /// <param name="id">The ID of the appointment to delete.</param>
-        Task DeleteAppointmentAsync(Guid id);
+        public async Task DeleteAppointmentAsync(Guid id)
+        {
+            await _appointmentRepository.DeleteAppointmentAsync(id);
+        }
     }
 }

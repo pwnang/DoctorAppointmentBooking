@@ -1,0 +1,32 @@
+@url = http://localhost:5083
+
+### Create an appointment ###
+
+POST {{url}}/api/appointment
+Content-Type: application/json
+
+{
+  "slotId": "7e8ce336-7847-4648-a86c-b59ea2df63d6",
+  "patientId": "4f337b1a-3ecc-4ea1-a867-d76a2fe1fb9b"
+}
+
+### Get all appointments ###
+
+GET {{url}}/api/appointment
+
+### Get appointment by ID ###
+
+GET {{url}}/api/appointment/ba5c2b37-46bc-4788-b171-e0748d9ed847
+
+### Update an appointment ###
+
+PUT {{url}}/api/appointment/2d4d74bc-5498-4ff5-8ebe-0ba831d17508
+Content-Type: application/json
+
+{
+  "status": "Cancelled"
+}
+
+### Delete an appointment ###
+
+DELETE {{url}}/api/appointment/{appointmentId}

@@ -1,25 +1,25 @@
 ﻿using DoctorAppointmentBooking.API.Entities;
 
-namespace DoctorAppointmentBooking.API.Services
+namespace DoctorAppointmentBooking.API.Repositories
 {
     /// <summary>
-    /// Service interface for managing appointments.
+    /// Repository interface for managing appointments.
     /// </summary>
-    public interface IAppointmentService
+    public interface IAppointmentRepository
     {
         /// <summary>
-        /// Creates a new appointment.
+        /// Adds a new appointment to the repository.
         /// </summary>
-        /// <param name="appointment">The appointment to create.</param>
-        /// <returns>The created appointment.</returns>
-        Task<Appointment> CreateAppointmentAsync(Appointment appointment);
+        /// <param name="appointment">The appointment to add.</param>
+        /// <returns>The added appointment.</returns>
+        Task<Appointment> AddAppointmentAsync(Appointment appointment);
 
         /// <summary>
         /// Retrieves the appointments associated with a specific patient.
         /// </summary>
         /// <param name="patientId">The ID of the patient.</param>
         /// <returns>The appointments associated with the specified patient.</returns>
-        Task<IEnumerable<Appointment>> GetPatientAppointmentsAsync(Guid patientId);
+        Task<IEnumerable<Appointment>> GetAppointmentsByPatientAsync(Guid patientId);
 
         /// <summary>
         /// Retrieves all appointments.
@@ -42,16 +42,17 @@ namespace DoctorAppointmentBooking.API.Services
         Task<bool> AppointmentExistsAsync(Guid id);
 
         /// <summary>
-        /// Updates an existing appointment.
+        /// Updates an existing appointment in the repository.
         /// </summary>
         /// <param name="appointment">The appointment to update.</param>
-        /// <returns>The updated appointment.</returns>
+        /// <returns>A task representing the asynchronous update operation.</returns>
         Task UpdateAppointmentAsync(Appointment appointment);
 
         /// <summary>
-        /// Deletes an appointment by its ID.
+        /// Deletes an appointment from the repository by its ID.
         /// </summary>
         /// <param name="id">The ID of the appointment to delete.</param>
+        /// <returns>A task representing the asynchronous delete operation.</returns>
         Task DeleteAppointmentAsync(Guid id);
     }
 }

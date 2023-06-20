@@ -1,4 +1,6 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using DoctorAppointmentBooking.API.Converters;
+using Newtonsoft.Json;
+using System.ComponentModel.DataAnnotations;
 
 namespace DoctorAppointmentBooking.API.Entities
 {
@@ -17,6 +19,7 @@ namespace DoctorAppointmentBooking.API.Entities
         /// Start time of the time slot.
         /// </summary>
         [Required]
+        [JsonConverter(typeof(CustomDateTimeConverter), "dd/MM/yyyy hh:mm tt")]
         public DateTime Time { get; set; } = DateTime.Now;
 
         /// <summary>
