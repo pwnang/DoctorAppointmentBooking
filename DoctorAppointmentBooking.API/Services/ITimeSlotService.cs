@@ -53,6 +53,14 @@ namespace DoctorAppointmentBooking.API.Services
         Task UpdateTimeSlotAsync(TimeSlot timeSlot);
 
         /// <summary>
+        /// Updates multiple time slots in the repository.
+        /// </summary>
+        /// <param name="timeSlots">The collection of time slots to update.</param>
+        /// <returns>A task representing the asynchronous operation.</returns>
+        Task UpdateTimeSlotsAsync(IEnumerable<TimeSlot> timeSlots);
+
+
+        /// <summary>
         /// Deletes a time slot by its unique identifier.
         /// </summary>
         /// <param name="id">The unique identifier of the time slot to delete.</param>

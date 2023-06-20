@@ -67,7 +67,7 @@ namespace DoctorAppointmentBooking.API.Services
         public async Task AddTimeSlotAsync(TimeSlot timeSlot)
         {
             // Check for time clashes with existing time slots
-            IEnumerable<TimeSlot> existingTimeSlots = await _timeSlotRepository.GetTimeSlotsByDoctorAsync(timeSlot.DoctorId);
+            var existingTimeSlots = await _timeSlotRepository.GetTimeSlotsByDoctorAsync(timeSlot.DoctorId);
             bool hasTimeClash = existingTimeSlots.Any(t => t.Time == timeSlot.Time);
 
             if (hasTimeClash)
@@ -90,6 +90,19 @@ namespace DoctorAppointmentBooking.API.Services
         public async Task UpdateTimeSlotAsync(TimeSlot timeSlot)
         {
             await _timeSlotRepository.UpdateTimeSlotAsync(timeSlot);
+        }
+
+        /// <summary>
+        /// Updates multiple time slots in the repository.
+        /// </summary>
+        /// <param name="timeSlots">The collection of time slots to update.</param>
+        /// <returns>A task representing the asynchronous operation.</returns>
+        public async Task UpdateTimeSlotsAsync(IEnumerable<TimeSlot> timeSlots)
+        {
+            foreach (var timeSlot in timeSlots)
+            {
+                await _timeSlotRepository.UpdateTimeSlotAsync(timeSlot);
+            }
         }
 
         /// <summary>

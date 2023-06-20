@@ -1,6 +1,7 @@
 ﻿using DoctorAppointmentBooking.API.Entities;
 using DoctorAppointmentBooking.API.Services;
 using Microsoft.AspNetCore.Mvc;
+using System.Linq;
 
 namespace DoctorAppointmentBooking.API.Controllers
 {
@@ -9,14 +10,16 @@ namespace DoctorAppointmentBooking.API.Controllers
     public class DoctorController : ControllerBase
     {
         private readonly IDoctorService _doctorService;
+        private readonly ITimeSlotService _timeSlotService;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="DoctorController"/> class.
         /// </summary>
         /// <param name="doctorService">The doctor service.</param>
-        public DoctorController(IDoctorService doctorService)
+        public DoctorController(IDoctorService doctorService, ITimeSlotService timeSlotService)
         {
             _doctorService = doctorService;
+            _timeSlotService = timeSlotService;
         }
 
         /// <summary>
@@ -78,7 +81,22 @@ namespace DoctorAppointmentBooking.API.Controllers
                 return NotFound();
             }
 
-            await _doctorService.UpdateDoctorAsync(doctor);
+            try
+            {
+                await _doctorService.UpdateDoctorAsync(doctor);
+
+                var timeSlots = await _timeSlotService.GetTimeSlotsByDoctorAsync(id);
+                foreach (var timeSlot in timeSlots)
+                {
+                    timeSlot.DoctorName = doctor.Name;
+                }
+                await _timeSlotService.UpdateTimeSlotsAsync(timeSlots);
+            }
+            catch (Exception ex)
+            {
+                BadRequest($"An error occurred while updating doctor with ID \"{id}\": {ex.Message}");
+            }
+
             return Ok(doctor);
         }
 
@@ -107,7 +125,21 @@ namespace DoctorAppointmentBooking.API.Controllers
                 return NotFound();
             }
 
-            await _doctorService.DeleteDoctorAsync(id);
+            try
+            {
+                await _doctorService.DeleteDoctorAsync(id);
+
+                var timeSlots = await _timeSlotService.GetTimeSlotsByDoctorAsync(id);
+
+                foreach (var timeSlot in timeSlots.ToList())
+                {
+                    await _timeSlotService.DeleteTimeSlotAsync(timeSlot.Id);
+                }
+            }
+            catch (Exception ex)
+            {
+                return BadRequest($"An error occurred while deleting doctor with ID \"{id}\": {ex.Message}");
+            }
 
             var response = new
             {

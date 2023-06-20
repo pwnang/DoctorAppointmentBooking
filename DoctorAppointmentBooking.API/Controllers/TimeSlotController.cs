@@ -46,7 +46,13 @@ namespace DoctorAppointmentBooking.API.Controllers
         [HttpGet("doctors/{doctorId}")]
         public async Task<ActionResult<IEnumerable<TimeSlot>>> GetTimeSlotsByDoctor(Guid doctorId)
         {
-            IEnumerable<TimeSlot> timeSlots = await _timeSlotService.GetTimeSlotsByDoctorAsync(doctorId);
+            var exists = await _doctorService.DoctorExistsAsync(doctorId);
+            if (!exists)
+            {
+                return NotFound($"Doctor with ID \"{doctorId}\" does not exist.");
+            }
+
+            var timeSlots = await _timeSlotService.GetTimeSlotsByDoctorAsync(doctorId);
             return Ok(timeSlots);
         }
 
@@ -58,6 +64,12 @@ namespace DoctorAppointmentBooking.API.Controllers
         [HttpGet("doctors/{doctorId}/available")]
         public async Task<ActionResult<IEnumerable<TimeSlot>>> GetAvailableTimeSlotsByDoctor(Guid doctorId)
         {
+            var exists = await _doctorService.DoctorExistsAsync(doctorId);
+            if (!exists)
+            {
+                return NotFound($"Doctor with ID \"{doctorId}\" does not exist.");
+            }
+
             var availableTimeSlots = await _timeSlotService.GetAvailableTimeSlotsByDoctorAsync(doctorId);
             return Ok(availableTimeSlots);
         }
@@ -71,6 +83,12 @@ namespace DoctorAppointmentBooking.API.Controllers
         [HttpPost("doctors/{doctorId}/add")]
         public async Task<IActionResult> AddTimeSlot(Guid doctorId, [FromBody] TimeSlotDto timeSlotDto)
         {
+            var exists = await _doctorService.DoctorExistsAsync(doctorId);
+            if (!exists)
+            {
+                return NotFound($"Doctor with ID \"{doctorId}\" does not exist.");
+            }
+
             timeSlotDto.DoctorId = doctorId;
 
             // Create a new TimeSlot instance
