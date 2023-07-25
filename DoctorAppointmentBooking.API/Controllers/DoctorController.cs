@@ -11,15 +11,18 @@ namespace DoctorAppointmentBooking.API.Controllers
     {
         private readonly IDoctorService _doctorService;
         private readonly ITimeSlotService _timeSlotService;
+        
+        private readonly ILogger<DoctorController> _logger;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="DoctorController"/> class.
         /// </summary>
         /// <param name="doctorService">The doctor service.</param>
-        public DoctorController(IDoctorService doctorService, ITimeSlotService timeSlotService)
+        public DoctorController(IDoctorService doctorService, ITimeSlotService timeSlotService, ILogger<DoctorController> logger)
         {
             _doctorService = doctorService;
             _timeSlotService = timeSlotService;
+            _logger = logger;
         }
 
         /// <summary>

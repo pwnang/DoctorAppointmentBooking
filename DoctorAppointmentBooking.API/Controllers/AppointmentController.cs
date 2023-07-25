@@ -16,14 +16,17 @@
         private readonly ITimeSlotService _timeSlotService;
         private readonly IDoctorService _doctorService;
 
+        private readonly ILogger<AppointmentController> _logger;
+
         public AppointmentController(IAppointmentService appointmentService, 
             IPatientService patientService, ITimeSlotService timeSlotService, 
-            IDoctorService doctorService)
+            IDoctorService doctorService, ILogger<AppointmentController> logger)
         {
             _appointmentService = appointmentService;
             _patientService = patientService;
             _timeSlotService = timeSlotService;
             _doctorService = doctorService;
+            _logger = logger;
         }
 
         /// <summary>
@@ -69,12 +72,61 @@
                 var appointment = await SyncAppointmentDtoWithData(appointmentDto, new Appointment());
 
                 var createdAppointment = await _appointmentService.CreateAppointmentAsync(appointment);
+
+                SendConfirmation(createdAppointment, timeSlot);
+
                 return Ok(createdAppointment);
             }
             catch (Exception ex)
             {
                 return BadRequest($"Failed to create appointment: {ex.Message}");
             }
+        }
+
+        private void SendConfirmation(Appointment appointment, TimeSlot timeSlot)
+        {
+            SendPatientConfirmation(appointment, timeSlot);
+            SendDoctorConfirmation(appointment, timeSlot);
+        }
+
+        private void SendPatientConfirmation(Appointment appointment, TimeSlot timeSlot)
+        {
+            var dateOnly = timeSlot.Time.ToString("dd/MM/yyyy");
+            var timeOnly = timeSlot.Time.ToString("hh:mm tt");
+
+            _logger.LogInformation($@"
+                Dear {appointment.PatientName},
+
+                We are pleased to confirm your upcoming appointment with {timeSlot.DoctorName} at our medical center.
+            
+                Appointment Details:
+                Date: {dateOnly}
+                Time: {timeOnly}
+
+                If you need to reschedule or cancel your appointment, please let us know at least 24 hours in advance.
+
+                We look forward to seeing you on {dateOnly}. If you have any questions or require further assistance, feel free to contact us.
+            ");
+        }
+
+        private void SendDoctorConfirmation(Appointment appointment, TimeSlot timeSlot)
+        {
+            var dateOnly = timeSlot.Time.ToString("dd/MM/yyyy");
+            var timeOnly = timeSlot.Time.ToString("hh:mm tt");
+
+            _logger.LogInformation($@"
+                Dear {timeSlot.DoctorName},
+
+                You have a new appointment scheduled with {appointment.PatientName} at our medical center.
+
+                Appointment Details:
+                Date: {dateOnly}
+                Time: {timeOnly}
+
+                Please login to our system if you need to make any changes to the appointment.
+
+                We appreciate your commitment to patient care and look forward to seeing you on {dateOnly}.
+            ");
         }
 
         /// <summary>

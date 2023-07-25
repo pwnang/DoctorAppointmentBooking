@@ -12,10 +12,13 @@ namespace DoctorAppointmentBooking.API.Controllers
         private readonly ITimeSlotService _timeSlotService;
         private readonly IDoctorService _doctorService;
 
-        public TimeSlotController(ITimeSlotService timeSlotService, IDoctorService doctorService)
+        private readonly ILogger<TimeSlotController> _logger;
+
+        public TimeSlotController(ITimeSlotService timeSlotService, IDoctorService doctorService, ILogger<TimeSlotController> logger)
         {
             _timeSlotService = timeSlotService;
             _doctorService = doctorService;
+            _logger = logger;
         }
 
         /// <summary>

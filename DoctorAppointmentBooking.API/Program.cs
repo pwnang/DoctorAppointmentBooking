@@ -1,8 +1,20 @@
 using DoctorAppointmentBooking.API.Extensions;
 using DoctorAppointmentBooking.API.Repositories;
 using DoctorAppointmentBooking.API.Services;
+using Serilog;
 
 var builder = WebApplication.CreateBuilder(args);
+
+builder.Host.UseSerilog((context, services, configuration) =>
+{
+    configuration
+        .ReadFrom.Configuration(context.Configuration)
+        .ReadFrom.Services(services);
+});
+
+builder.Services.AddHttpLogging(options =>
+    options.LoggingFields = Microsoft.AspNetCore.HttpLogging.HttpLoggingFields.All
+);
 
 builder.Services.AddCustomDatabaseServices(builder.Configuration);
 
@@ -26,6 +38,7 @@ builder.Services.AddControllers()
     .AddNewtonsoftJson();
 
 var app = builder.Build();
+app.UseHttpLogging();
 
 app.MapGet("/", () => "Hello World!");
 app.MapControllers();
